@@ -1,6 +1,13 @@
 #include <iostream>
 
-int menu(int a) {
+struct List {
+    struct List *next;
+    int age;
+    struct List *prev;
+};
+
+int menu() {
+    int a;
     printf("Hello\n");
     printf("1.Show list\n");
     printf("2.Add to list\n");
@@ -14,6 +21,7 @@ int menu(int a) {
             printf("AAA\n");
             break;
         case 2:
+
             printf("AAA\n");
             break;
         case 3:
@@ -29,51 +37,91 @@ int menu(int a) {
             printf("AAA\n");
             break;
     }
-    return 0;
+
 }
 
-//craete node
-struct List {
-    int age;
-    struct List *next;
-    struct List *prev;
-};
+//void printList(List* head){
+//    for (List* node = head; node != NULL; node = node->next) {
+//        printf("%d\n", node->age);
+//    }
+//}
+//
+//List* createPerson(int age) {
+//    List* person = (List*) malloc(sizeof(List));
+//    person->age = age;
+//    return person;
+//}
+struct List* addList(struct List* n,int age){
+    struct List *temp =(List*)malloc(sizeof(struct List));
+    temp->prev = NULL;
+    temp->age = age;
+    temp->next = NULL;
+    n = temp;
+    return n;
+}
+struct List* addBeg(struct List* n,int age){
+    struct List *temp =(List*)malloc(sizeof(struct List));
+    temp->prev = NULL;
+    temp->age = age;
+    temp->next = NULL;
+    temp->next = n;
+    n->prev = temp;
+    n = temp;
+    return n;
+}
+struct List* addEnd(struct List* n,int age){
+    struct List *temp,*tail;
+    temp=(List*)malloc(sizeof(struct List));
+    temp->prev = NULL;
+    temp->age = age;
+    temp->next = NULL;
+    tail = n;
+    while(tail->next != NULL) {
+        tail = tail->next;
+    }
+    tail->next=temp;
+    temp->prev=tail;
+    return n;
+}
 
 int main() {
-    int a;
-
-    List *head;
-    List *tail;
-    List *n;
-
-    n - new List;
-    n->age = 1;
-    n->prev = nullptr;
-    head = n;
-    tail = n;
-    printf("%d\n", *n);
-
-    n - new List;
-    n->age = 2;
-    n->prev = tail;
-    tail->next = n;
-    tail = n;
-    printf("%d\n", *n);
-
-    n - new List;
-    n->age = 3;
-    n->prev = tail;
-    tail->next = n;
-    tail = n;
-    tail->next = nullptr;
-    printf("%d\n", *n);
+    menu();
+    struct List* head = NULL;
+    struct List* ptr;
+    head = addList(head,10);
+    head = addBeg(head,20);
+    head = addBeg(head,30);
+    head = addBeg(head,40);
+    head = addEnd(head,99);
+    ptr = head;
+    while(ptr != NULL){
+        printf("%d\n",ptr->age);
+        ptr = ptr -> next;
+    }
 
 
 
 
 
-    //menu(a);
 
+
+
+
+
+
+//    List* HEAD = createPerson(1);
+//    List* node = createPerson(2);
+//    HEAD->next = node;
+//    node = createPerson(3);
+//    HEAD->next->next = node;
+//
+//    for (int i = 4; i < 100; i++) {
+//        node = createPerson(i);
+//        HEAD->next = node;
+//    }
+//
+//
+//    printList(HEAD);
     return 0;
 }
 
