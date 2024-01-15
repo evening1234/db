@@ -1,12 +1,7 @@
 #include <iostream>
-
 struct List {
     struct List *next;
-    char lastName;
-    char name;
     int age;
-    char id;
-    char sex;
     struct List *prev;
 };
 
@@ -21,21 +16,17 @@ struct List {
 //    person->age = age;
 //    return person;
 //}
-struct List* addList(List* n,char lastName,char name,int age,char id,char sex){
-    List *temp =(List*)malloc(sizeof(List));
+struct List* addList(struct List* n,int age){
+    struct List *temp =(List*)malloc(sizeof(struct List));
     temp->prev = NULL;
-    char lastName=lastName;
-    char name=name;
-    int age=age;
-    char id=id;
-    char sex=sex;
+    temp->age = age;
     temp->next = NULL;
     n = temp;
     return n;
 }
 
-struct List* addBeg(List* n,char lastName,char name,int age,char id,char sex){
-    List *temp =(List*)malloc(sizeof(List));
+struct List* addBeg(struct List* n,int age){
+    struct List *temp =(List*)malloc(sizeof(struct List));
     temp->prev = NULL;
     temp->age = age;
     temp->next = NULL;
@@ -44,51 +35,43 @@ struct List* addBeg(List* n,char lastName,char name,int age,char id,char sex){
     n = temp;
     return n;
 }
-struct List* addEnd(List* n,int age){
-    List *temp,*tail;
-    temp=(List*)malloc(sizeof(List));
-    temp->prev = NULL;
-    temp->age = age;
-    temp->next = NULL;
-    tail = n;
-    while(tail->next != NULL) {
-        tail = tail->next;
-    }
-    tail->next=temp;
-    temp->prev=tail;
-    return n;
-}
 int menu() {
-    int a=-1;
     struct List* head = NULL;
     struct List* ptr;
-
-
+    int a;
+    printf("-||-Hello-||-\n");
+    printf("|1|-Show list-\n");
+    printf("|2|-Add to list-\n");
+    printf("|3|-Remove from list-\n");
+    printf("|4|-Find-\n");
+    printf("|5|-List management-\n");
+    printf("|6|-Exit-\n");
+    //head = addList(head, 5);
     while(a!=6) {
-        printf("Hello\n");
-        printf("1.Show list\n");
-        printf("2.Add to list\n");
-        printf("3.Remove from list\n");
-        printf("4.Find\n");
-        printf("5.List management\n");
-        printf("6.Exit\n");
         scanf("%d", &a);
         switch (a) {
             case 1:
+                ptr = head;
+                if(ptr==NULL){
+                    printf("List is empty!");
+                }else{
+                    while(ptr != NULL){
+                        printf("age is:%d\n",ptr->age);
+                        ptr = ptr -> next;
+                    }
+                }
 
                 break;
             case 2:
-                head = addList(head,f,f,f,f,f);
-                head = addBeg(head, f,f,f,f,f);
-                head = addBeg(head, f,f,f,f,f);
-                head = addBeg(head, f,f,f,f,f);
-                head = addEnd(head, 99);
-                ptr = head;
-                while (ptr != NULL) {
-                    printf("%d\n", ptr->age);
-                    ptr = ptr->next;
+                int n;
+                printf("add age:");
+                scanf("%d",&n);
+                if(head!=NULL){
+                    head = addBeg(head,n);
+                }else{
+                    head = addList(head, n);
                 }
-
+                printf("confirmed\n");
                 break;
             case 3:
                 printf("AAA\n");
@@ -100,15 +83,47 @@ int menu() {
                 printf("AAA\n");
                 break;
             case 6:
-                printf("AAA\n");
+                printf("see you later\n");
                 break;
+            default:
+                printf("chose something\n");
         }
     }
 }
+//struct List* addEnd(struct List* n,int age){
+//    struct List *temp,*tail;
+//    temp=(List*)malloc(sizeof(struct List));
+//    temp->prev = NULL;
+//    temp->age = age;
+//    temp->next = NULL;
+//    tail = n;
+//    while(tail->next != NULL) {
+//        tail = tail->next;
+//    }
+//    tail->next=temp;
+//    temp->prev=tail;
+//    return n;
+//}
 
 int main() {
+
     menu();
-    return 0;
+
+
+//    head = addList(head,n);
+
+//    head = addEnd(head,99);
+
+
+
+
+
+
+
+
+
+
+
 
 //    List* HEAD = createPerson(1);
 //    List* node = createPerson(2);
@@ -123,18 +138,7 @@ int main() {
 //
 //
 //    printList(HEAD);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
+    return 0;
+}
 
 
