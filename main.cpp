@@ -1,83 +1,124 @@
 #include <iostream>
+#include <cstring>
+
+using namespace std;
 struct List {
-    struct List *next;
+    List *next;
+    char lastname[50];
     int age;
-    struct List *prev;
+    List *prev;
 };
 
-//void printList(List* head){
-//    for (List* node = head; node != NULL; node = node->next) {
-//        printf("%d\n", node->age);
-//    }
-//}
-//
-//List* createPerson(int age) {
-//    List* person = (List*) malloc(sizeof(List));
-//    person->age = age;
-//    return person;
-//}
-struct List* addList(struct List* n,int age){
-    struct List *temp =(List*)malloc(sizeof(struct List));
-    temp->prev = NULL;
-    temp->age = age;
-    temp->next = NULL;
-    n = temp;
-    return n;
+void showList(List *head) {
+    List *ptr = head;
+    if (ptr == NULL) {
+        printf("List is empty!\n");
+    } else {
+        while (ptr != NULL) {
+            printf("age is:%d\n", ptr->age);
+            printf("lastname is:%s\n", ptr->lastname);
+            ptr = ptr->next;
+        }
+    }
 }
 
-struct List* addBeg(struct List* n,int age){
-    struct List *temp =(List*)malloc(sizeof(struct List));
-    temp->prev = NULL;
-    temp->age = age;
-    temp->next = NULL;
-    temp->next = n;
-    n->prev = temp;
-    n = temp;
-    return n;
+List *addPerson(List *head) {
+    List *temp = (List *) malloc(sizeof(List));
+    printf("age: ");
+    scanf("%d", &(temp->age));
+    printf("lastname: ");
+    scanf("%s", temp->lastname);
+
+    if (head != NULL) { // add new element at the beginning, that is, new head
+        temp->prev = NULL;
+        temp->next = head;
+        head->prev = temp;
+        head = temp;
+    } else { // add first element
+        temp->next = NULL;
+        temp->prev = NULL;
+        head = temp;
+        return head;
+    }
+
+    printf("confirmed\n");
+    return head;
 }
+
+List *removePerson(List *head) {
+    char lastname[50];
+    printf("lastname to remove: ");
+    scanf("%s", lastname);
+    for (List *i = head; i != NULL; i = i->next) {
+        if (strcmp(lastname, i->lastname) == 0) {
+            if (i->prev == NULL && i->next == NULL) {// remove one
+                head = NULL;
+            } else if (i->prev == NULL) { // remove first
+                i->next->prev = NULL;
+                head = i->next;
+            } else if (i->prev != NULL && i->next != NULL) {//remove middle
+                i->prev->next = i->next;
+                i->next->prev = i->prev;
+            } else if (i->next == NULL) { // remove last
+                i->prev->next = NULL;
+            }
+            free(i);
+            return head;
+        }
+    }
+}
+
+List *findPerson(List *head) {
+    char lastname[50];
+    printf("lastname to find: ");
+    scanf("%s", lastname);
+    for (List *i = head; i != NULL; i = i->next) {
+        if (strcmp(lastname, i->lastname) == 0) {
+            printf("age is:%d\n", i->age);
+            printf("lastname is:%s\n", i->lastname);
+            break;
+        }
+    }
+    return head;
+}
+
+int options(int a) {
+    printf("-||-Hello-||-\n");
+    printf("|1|-Show list-\n");
+    printf("|2|-Add to list-\n");
+    printf("|3|-Remove from list-\n");
+    printf("|4|-Find-\n");
+    printf("|5|-Sort list-\n");
+    printf("|6|-Exit-\n");
+    return a;
+
+}
+
 int menu() {
-    struct List* head = NULL;
-    struct List* ptr;
+    List *head = NULL;
     int a;
     printf("-||-Hello-||-\n");
     printf("|1|-Show list-\n");
     printf("|2|-Add to list-\n");
     printf("|3|-Remove from list-\n");
     printf("|4|-Find-\n");
-    printf("|5|-List management-\n");
+    printf("|5|-Sort list-\n");
     printf("|6|-Exit-\n");
-    //head = addList(head, 5);
-    while(a!=6) {
+    while (a != 6) {
+
         scanf("%d", &a);
         switch (a) {
             case 1:
-                ptr = head;
-                if(ptr==NULL){
-                    printf("List is empty!");
-                }else{
-                    while(ptr != NULL){
-                        printf("age is:%d\n",ptr->age);
-                        ptr = ptr -> next;
-                    }
-                }
-
+                showList(head);
                 break;
             case 2:
-                int n;
-                printf("add age:");
-                scanf("%d",&n);
-                if(head!=NULL){
-                    head = addBeg(head,n);
-                }else{
-                    head = addList(head, n);
-                }
-                printf("confirmed\n");
+                head = addPerson(head);
                 break;
             case 3:
-                printf("AAA\n");
+                head = removePerson(head);
                 break;
             case 4:
-                printf("AAA\n");
+                head = findPerson(head);
                 break;
             case 5:
                 printf("AAA\n");
@@ -90,27 +131,27 @@ int menu() {
         }
     }
 }
-//struct List* addEnd(struct List* n,int age){
-//    struct List *temp,*tail;
-//    temp=(List*)malloc(sizeof(struct List));
-//    temp->prev = NULL;
-//    temp->age = age;
-//    temp->next = NULL;
-//    tail = n;
-//    while(tail->next != NULL) {
-//        tail = tail->next;
-//    }
-//    tail->next=temp;
-//    temp->prev=tail;
-//    return n;
-//}
+
+struct List *addEnd(struct List *n, int age) {
+    struct List *temp, *tail;
+    temp = (List *) malloc(sizeof(struct List));
+    temp->prev = NULL;
+    temp->age = age;
+    temp->next = NULL;
+    tail = n;
+    while (tail->next != NULL) {
+        tail = tail->next;
+    }
+    tail->next = temp;
+    temp->prev = tail;
+    return n;
+}
 
 int main() {
-
     menu();
 
 
-//    head = addList(head,n);
+//    head = createList(head,n);
 
 //    head = addEnd(head,99);
 
