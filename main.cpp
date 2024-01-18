@@ -1,9 +1,6 @@
-#include <iostream>
-#include <cstring>
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-
 
 using namespace std;
 
@@ -16,6 +13,7 @@ struct Person {
 
 struct List {
     Person *head;
+    Person *tail;
     int size;
 };
 
@@ -32,26 +30,27 @@ void showList(Person *head) {
     }
 }
 
-void addPerson(List *list) {
-    Person *temp = (Person *) malloc(sizeof(Person));
-    printf("age: ");
-    scanf("%d", &(temp->age));
-    printf("lastname: ");
-    scanf("%s", temp->lastname);
-
-    if (list->head != NULL) { // add new element at the beginning, that is, new list->head
-        temp->prev = NULL;
-        temp->next = list->head;
-        list->head->prev = temp;
-        list->head = temp;
+void addPerson(List *list, Person *person) {
+    if (list->head != NULL) { // add new element at the end
+        person->prev = list->tail;
+        list->tail->next = person;
+        list->tail = person;
+        person->next = NULL;
     } else { // add first element
-        temp->next = NULL;
-        temp->prev = NULL;
-        list->head = temp;
+        person->next = NULL;
+        person->prev = NULL;
+        list->head = person;
+        list->tail = person;
     }
-    list->size++;
+}
 
-    printf("confirmed\n");
+Person *scanPerson() {
+    Person *person = (Person *) malloc(sizeof(Person));
+    printf("age: ");
+    scanf("%d", &(person->age));
+    printf("lastname: ");
+    scanf("%s", person->lastname);
+    return person;
 }
 
 void removePerson(List *list) {
@@ -91,7 +90,7 @@ void findPerson(Person *head) {
     }
 }
 
-int options(int a) {
+void options() {
     printf("-||-Hello-||-\n");
     printf("|1|-Show list-\n");
     printf("|2|-Add to list-\n");
@@ -99,31 +98,54 @@ int options(int a) {
     printf("|4|-Find-\n");
     printf("|5|-Sort list-\n");
     printf("|6|-Exit-\n");
-    return a;
-
 }
 
-//void sorting(Person* head){
-//   Person *array = (Person*) malloc(sizeof(Person*) * n);
-//
-////    for () {
-////
-////    }
-//}
+List sortList(List *list, char ascending) {
+    Person **arr = (Person **) malloc(sizeof(Person *) * list->size);
 
-int menu() {
+    int idx = 0;
+    for (Person *i = list->head; i != NULL; i = i->next) {
+        arr[idx++] = i;
+    }
+
+    for (int i = 0; i < list->size; i++) {
+        for (int j = 0; j < list->size - i - 1; j++) { // > ascending, < descending
+            if (ascending == 'n') {
+                if (strcmp(arr[j]->lastname, arr[j + 1]->lastname) < 1) {
+                    Person *temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            } else {
+                if (strcmp(arr[j]->lastname, arr[j + 1]->lastname) > 1) {
+                    Person *temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    List sortedList;
+    sortedList.head = NULL;
+    sortedList.tail = NULL;
+    for (int i = 0; i < list->size; i++) {
+        addPerson(&sortedList, arr[i]);
+    }
+
+    sortedList.size = list->size;
+    free(arr);
+    return sortedList;
+}
+
+void menu() {
     List list;
     list.head = NULL;
+    list.tail = NULL;
     list.size = 0;
 
-    int a;
-    printf("-||-Hello-||-\n");
-    printf("|1|-Show list-\n");
-    printf("|2|-Add to list-\n");
-    printf("|3|-Remove from list-\n");
-    printf("|4|-Find-\n");
-    printf("|5|-Sort list-\n");
-    printf("|6|-Exit-\n");
+    int a = -1;
+    options();
     while (a != 6) {
 
         scanf("%d", &a);
@@ -131,18 +153,28 @@ int menu() {
             case 1:
                 showList(list.head);
                 break;
-            case 2:
-                addPerson(&list);
+            case 2: {
+                Person *person = scanPerson();
+                addPerson(&list, person);
+                list.size++;
+                printf("confirmed\n");
                 break;
+            }
             case 3:
                 removePerson(&list);
                 break;
             case 4:
                 findPerson(list.head);
                 break;
-            case 5:
-//                sorting(list->head);
+            case 5: {
+                char ascending;
+                printf("Ascending? Y/n\n");
+                scanf(" %c", &ascending);
+
+                list = sortList(&list, ascending);
+                printf("Done\n");
                 break;
+            }
             case 6:
                 printf("see you later\n");
                 break;
@@ -150,61 +182,12 @@ int menu() {
                 printf("chose something\n");
         }
     }
+
+    // TODO free
 }
-
-struct Person *addEnd(struct Person *n, int age) {
-    struct Person *temp, *tail;
-    temp = (Person *) malloc(sizeof(struct Person));
-    temp->prev = NULL;
-    temp->age = age;
-    temp->next = NULL;
-    tail = n;
-    while (tail->next != NULL) {
-        tail = tail->next;
-    }
-    tail->next = temp;
-    temp->prev = tail;
-    return n;
-}
-
-
-
-
 
 int main() {
     menu();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    Person* HEAD = createPerson(1);
-//    Person* node = createPerson(2);
-//    HEAD->next = node;
-//    node = createPerson(3);
-//    HEAD->next->next = node;
-//
-//    for (int i = 4; i < 100; i++) {
-//        node = createPerson(i);
-//        HEAD->next = node;
-//    }
-//
-//
-//    printList(HEAD);
     return 0;
 }
-
-
