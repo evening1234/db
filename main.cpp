@@ -7,7 +7,10 @@ using namespace std;
 struct Person {
     Person *next;
     char lastname[50];
+    char name[50];
     int age;
+    char id[50];
+    char sex[50];
     Person *prev;
 };
 
@@ -17,14 +20,21 @@ struct List {
     int size;
 };
 
+void printPerson(Person *ptr) {
+    printf("lastname is:%s\n", ptr->lastname);
+    printf("name:%s\n", ptr->name);
+    printf("age is:%d\n", ptr->age);
+    printf("ID is:%s\n", ptr->id);
+    printf("sex is:%s\n", ptr->sex);
+}
+
 void showList(Person *head) {
     Person *ptr = head;
     if (ptr == NULL) {
         printf("List is empty!\n");
     } else {
         while (ptr != NULL) {
-            printf("age is:%d\n", ptr->age);
-            printf("lastname is:%s\n", ptr->lastname);
+            printPerson(ptr);
             ptr = ptr->next;
         }
     }
@@ -46,10 +56,16 @@ void addPerson(List *list, Person *person) {
 
 Person *scanPerson() {
     Person *person = (Person *) malloc(sizeof(Person));
-    printf("age: ");
-    scanf("%d", &(person->age));
     printf("lastname: ");
     scanf("%s", person->lastname);
+    printf("name: ");
+    scanf("%s", person->name);
+    printf("age: ");
+    scanf("%d", &(person->age));
+    printf("id: ");
+    scanf("%s", person->id);
+    printf("sex: ");
+    scanf("%s", person->sex);
     return person;
 }
 
@@ -83,8 +99,7 @@ void findPerson(Person *head) {
     scanf("%s", lastname);
     for (Person *i = head; i != NULL; i = i->next) {
         if (strcmp(lastname, i->lastname) == 0) {
-            printf("age is:%d\n", i->age);
-            printf("lastname is:%s\n", i->lastname);
+            printPerson(i);
             break;
         }
     }
@@ -138,6 +153,18 @@ List sortList(List *list, char ascending) {
     return sortedList;
 }
 
+void freeList(List *list) {
+    if (list->head == NULL) {
+        return;
+    }
+
+    for(Person *i = list->head->next; i != NULL; i = i->next) {
+        free(i->prev);
+    }
+
+    free(list->tail);
+}
+
 void menu() {
     List list;
     list.head = NULL;
@@ -183,7 +210,7 @@ void menu() {
         }
     }
 
-    // TODO free
+    freeList(&list);
 }
 
 int main() {
